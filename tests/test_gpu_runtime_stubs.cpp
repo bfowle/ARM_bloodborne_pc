@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <setjmp.h>
+#include "../src/guest_cpu.h"
 // Renderer tests have no guest process. Clock/host-thread services work; guest accesses abort.
 extern "C" {
 thread_local sigjmp_buf* runtime_fault_recover = nullptr;
@@ -21,5 +22,18 @@ void runtime_restart() { std::abort(); }
 uint64_t runtime_process_time_counter() { return runtime_process_time_us() * 1000; }
 int32_t* runtime_errno() { std::abort(); }
 int runtime_memory_write_backing(uintptr_t, const void*, uint64_t) { std::abort(); }
+const uint64_t* runtime_memory_generation() { std::abort(); }
+void runtime_memory_note_write(uintptr_t, uint64_t) { std::abort(); }
+void runtime_memory_set_note_write_hook(void (*)(uintptr_t, uint64_t)) { std::abort(); }
+void runtime_memory_set_cpu_write_hook(void (*)(uintptr_t, uint64_t)) { std::abort(); }
+void runtime_memory_set_guest_chunk_allocator(int (*)(uint64_t, uint64_t)) { std::abort(); }
+void runtime_memory_set_write_watch(uintptr_t, uint64_t, int) { std::abort(); }
+int runtime_memory_direct_phys(uintptr_t, uint64_t*, uintptr_t*) { std::abort(); }
+int runtime_memory_vma_info(uintptr_t, int*, int*, uintptr_t*) { std::abort(); }
+uint64_t runtime_heap_growths() { return 0; }
+void runtime_sleep_stats(uint64_t* calls, uint64_t* ns) { *calls = 0; *ns = 0; }
+void runtime_wait_report(double) {}
+int guest_cpu_signal_regs(const void*, GuestRegs*) { std::abort(); }
+uintptr_t guest_cpu_host_pc(const void*) { std::abort(); }
 }
 
